@@ -1,0 +1,2 @@
+# GoCICD
+Practice for CICD
