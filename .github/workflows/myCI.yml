@@ -24,6 +24,19 @@ jobs: # job to execute
 
     - name: Checkout Repo
       uses: actions/checkout@v2.4.2
+    
+    - name: Checkout Remote Private Repo
+      uses: actions/checkout@v2.4.2
+      with:
+        repository: lowkh2/GoSchoolRemoteExample
+        token: ${{ secrets.GOSCHOOL_REMOTE_BEN }}
+        path: remote
+    - name: Check remote files
+      run: |
+        cd remote
+        ls
+        cat myText.txt
+        cd ..
       
     - name: Check File System
       run: ls
@@ -31,7 +44,7 @@ jobs: # job to execute
     - name: Install Dependencies
       run: |
         go mod init calc
-        go get github.com/tebeka/go2xunit
+        go install github.com/tebeka/go2xunit
         go mod tidy
         go test -v
         go test -v | go2xunit -output tests.xml
