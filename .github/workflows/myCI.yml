@@ -4,63 +4,62 @@ on: # for event triggering
     branches: [main] # add with comma for more branches to monitor
   pull_request:
     branches: [main]
-    
+
 jobs: # job to execute
   build: # name of the job
     name: Load OS # name for printing
     runs-on: ubuntu-latest # specify OS in virtual machine
     steps:
-    - name: Print hello
-      run: | # run terminal command
-        ls
-        echo Hello!!
-        
-    - name: Setup Go
-      uses: actions/setup-go@v3.2.0
-      with:
-        go-version: 1.18
-    - name: Check Go Version
-      run: go version
+      - name: Print hello
+        run: | # run terminal command
+          ls
+          echo Hello!!
 
-    - name: Checkout Repo
-      uses: actions/checkout@v2.4.2
-    
-    - name: Checkout Remote Private Repo
-      uses: actions/checkout@v2.4.2
-      with:
-        repository: lowkh2/GoSchoolRemoteExample
-        token: ${{ secrets.GOSCHOOL_REMOTE_BEN }}
-        path: remote
-    - name: Check remote files
-      run: |
-        cd remote
-        ls
-        cat myText.txt
-        cd ..
-      
-    - name: Check File System
-      run: ls
+      - name: Setup Go
+        uses: actions/setup-go@v3.2.0
+        with:
+          go-version: 1.18
+      - name: Check Go Version
+        run: go version
 
-    - name: Install Dependencies
-      run: |
-        go mod init calc
-        go install github.com/tebeka/go2xunit@latest
-        go mod tidy
-        go test -v
-        go test -v | go2xunit -output tests.xml
-        
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      if: always()
-      with:
-        files: tests.xml
-        
-    - if: ${{ failure() }}
-      uses: nashmaniac/create-issue-action@v1.1
-      name: Create Issue Action
-      with:
-        title: Build Failed
-        token: ${{secrets.GITHUB_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: worflow-failed
-        body: Workflow failed for commit ${{github.sha}}
+      - name: Checkout Repo
+        uses: actions/checkout@v2.4.2
+
+      - name: Checkout Remote Private Repo
+        uses: actions/checkout@v2.4.2
+        with:
+          repository: lowkh2/GoSchoolRemoteExample
+          token: ${{ secrets.GOSCHOOL_REMOTE_BEN }}
+          path: remote
+      - name: Check remote files
+        run: |
+          cd remote
+          ls
+          cat myText.txt
+          cd ..
+
+      - name: Check File System
+        run: ls
+
+      - name: Install Dependencies
+        run: |
+          go install github.com/tebeka/go2xunit@latest
+          go mod tidy
+          go test -v
+          go test -v | go2xunit -output tests.xml
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: tests.xml
+
+      - if: ${{ failure() }}
+        uses: nashmaniac/create-issue-action@v1.1
+        name: Create Issue Action
+        with:
+          title: Build Failed
+          token: ${{secrets.GITHUB_TOKEN}}
+          assignees: ${{github.actor}}
+          labels: worflow-failed
+          body: Workflow failed for commit ${{github.sha}}
