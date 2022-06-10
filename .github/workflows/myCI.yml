@@ -27,3 +27,8 @@ jobs: # job to execute
       
     - name: Check File System
       run: ls
+
+    - name: Install Dependencies
+      run: |
+        go get github.com/franela/goblin
+        go test -v
