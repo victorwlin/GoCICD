@@ -44,7 +44,6 @@ jobs: # job to execute
     - name: Install Dependencies
       run: |
         go mod init calc
-        go mod tidy
         go install github.com/tebeka/go2xunit@latest
         go mod tidy
         go test -v
