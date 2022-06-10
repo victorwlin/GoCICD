@@ -30,5 +30,6 @@ jobs: # job to execute
 
     - name: Install Dependencies
       run: |
-        go get github.com/franela/goblin
+        go mod init calc
+        go mod tidy
         go test -v
